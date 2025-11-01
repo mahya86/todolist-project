@@ -90,7 +90,6 @@ const saveLists = () => {
 const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
 $.documentElement.classList.toggle('dark', theme === 'dark')
 updateThemeToggleIcon()
-alert(window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 
 window.addEventListener('load', () => {
