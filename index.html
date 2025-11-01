@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style/output.css">
+    <title>To-Do List</title>
+</head>
+
+<body
+    class="min-h-screen flex flex-col justify-center px-6 py-14 xs:pt-16 sm:pt-20 md:px-10 lg:p-20 relative dark:bg-neutral-900 font-roboto-slab">
+    <div id="loading-screen"
+        class="fixed inset-0 flex flex-col items-center justify-center gap-6 bg-gray-100 dark:bg-neutral-900 z-50">
+        <div class="relative w-24 h-24 flex items-center justify-center">
+            <div
+                class="absolute origin-center rounded-md shadow w-10 h-10 bg-lime-300 dark:bg-lime-950 animate-rotateCube">
+            </div>
+            <div
+                class="absolute origin-center rounded-md shadow w-10 h-10 bg-red-300 dark:bg-red-900 animate-rotateCube [animation-delay:0.3s]">
+            </div>
+            <div
+                class="absolute origin-center rounded-md shadow w-10 h-10 bg-yellow-300 dark:bg-yellow-800 animate-rotateCube [animation-delay:0.6s]">
+            </div>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-lg animate-pulse">
+            Loading...
+        </p>
+    </div>
+    <div id="modal-overlay" class="hidden fixed inset-0 backdrop-blur-[1px] z-40"></div>
+    <div id="user-name-modal"
+        class="fixed -top-50 left-1/2 -translate-x-1/2 w-56 xs:w-68 sm:w-80 p-1 md:p-2 flex flex-col items-center gap-2 xs:gap-3 lg:gap-4 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-gray-600 shadow rounded-sm z-50 transition-all duration-200 ease-out backdrop-blur-[1px]">
+        <button type="button" id="close-modal-btn"
+            class="ml-auto bg-red-600 dark:bg-red-800 rounded-sm shadow-md cursor-pointer xs:text-lg sm:text-xl text-white dark:text-gray-300 h-6 xs:h-7 sm:h-8 w-8 xs:w-9 sm:w-12 hover:bg-red-700 dark:hover:bg-red-900 hover:shadow-lg active:scale-75 transition-all duration-200">
+            <i class="fas fa-close"></i>
+        </button>
+        <label for="user-name-input" id="user-name-label"
+            class="mr-auto ml-6 text-sm xs:text-base lg:text-lg text-gray-500 dark:text-gray-400">Write your
+            name:</label>
+        <input type="text" id="user-name-input" maxlength="15"
+            class="w-48 xs:w-60 sm:w-64 px-3 py-1 bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-gray-400 text-gray-500 dark:text-gray-400 rounded-3xl shadow focus:outline-gray-400 dark:focus:outline-gray-900">
+        <button type="button" id="ok-modal-btn"
+            class="mr-auto bg-emerald-600 dark:bg-emerald-800 rounded-sm shadow-md cursor-pointer xs:text-lg sm:text-xl text-white dark:text-gray-300 h-6 xs:h-7 sm:h-8 w-8 xs:w-9 sm:w-12 hover:bg-emerald-700 dark:hover:bg-emerald-900 hover:shadow-lg active:scale-75 transition-all duration-200">
+            <i class="fas fa-check"></i>
+        </button>
+    </div>
+    <button type="button" id="theme-toggle-btn"
+        class="absolute top-3 sm:top-5 lg:top-9 right-2 sm:right-3 lg:right-9 flex items-center justify-center border border-gray-200 dark:border-gray-600 rounded-full h-8 xs:h-10 w-8 xs:w-10 cursor-pointer shadow hover:bg-gray-50 dark:hover:bg-neutral-800 active:scale-75 transition-all duration-200">
+        <i id="theme-toggle-icon" class="fas fa-moon text-lg xs:text-3xl text-gray-800 dark:text-yellow-400"></i>
+    </button>
+    <section
+        class="min-h-96 xs:flex-1 py-6 px-4 sm:px-8 lg:px-14 shadow-md rounded-3xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-neutral-800 flex flex-col gap-9 sm:gap-10">
+        <h1 class="text-lg xs:text-2xl sm:text-3xl text-center text-gray-700 dark:text-gray-400">
+            Welcome to your to-do list,
+            <span id="user-name">dear</span> :)
+            <button type="button" id="edit-name-btn"
+                class="py-0.5 px-1 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm cursor-pointer text-[0.5rem] xs:text-[0.625rem] sm:text-xs text-gray-300 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-neutral-700 active:scale-75 transition-all duration-200">
+                <i class="fas fa-pencil-alt"></i>
+                Edit
+            </button>
+        </h1>
+        <div class="flex flex-col gap-2 sm:gap-4 mx-auto">
+            <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-1">
+                <input type="text" id="new-todo-input" maxlength="20" placeholder="Add new to-do"
+                    class="xs:w-90 sm:w-96 h-10 px-3 text-sm xs:text-base placeholder:text-gray-400 dark:placeholder:text-gray-600 border border-gray-300 dark:border-gray-400 text-gray-600 dark:text-gray-400 rounded-3xl shadow focus:outline-gray-400 dark:focus:outline-gray-700">
+                <button id="add-todo-btn" type="button"
+                    class="bg-emerald-500 dark:bg-emerald-700 w-16 xs:w-20 sm:w-24 h-8 xs:h-9 sm:h-10 rounded-3xl shadow-md cursor-pointer text-sm xs:text-base sm:text-lg text-white dark:text-gray-300 hover:bg-emerald-600 dark:hover:bg-emerald-800 hover:shadow-lg active:scale-75 transition-all duration-200">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </button>
+            </div>
+            <div id="color-picker" class="order-first sm:order-none flex justify-center sm:justify-start gap-1.5">
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-white dark:bg-neutral-800 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-white dark:bg-neutral-800"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-lime-300 dark:bg-lime-950 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-lime-300 dark:bg-lime-950"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-pink-300 dark:bg-pink-950 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-pink-300 dark:bg-pink-950"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-sky-300 dark:bg-blue-950 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-sky-300 dark:bg-blue-950"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-orange-300 dark:bg-orange-900 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-orange-300 dark:bg-orange-900"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-purple-300 dark:bg-purple-950 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-purple-300 dark:bg-purple-950"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-red-300 dark:bg-red-900 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-red-300 dark:bg-red-900"></div>
+                <div class="h-5 xs:h-6 w-5 xs:w-6 border border-gray-400 dark:border-white rounded-full bg-yellow-200 dark:bg-yellow-800 cursor-pointer hover:border-gray-500 dark:hover:border-gray-600 hover:shadow-md"
+                    data-color="bg-yellow-200 dark:bg-yellow-800"></div>
+            </div>
+        </div>
+        <div id="todo-section" class="hidden">
+            <h2
+                class="w-24 xs:w-30 xs:text-lg sm:text-xl bg-yellow-100 dark:bg-yellow-400 border-l-8 border-l-yellow-300 dark:border-l-yellow-600 p-2 text-gray-700">
+                <i class="fas fa-edit"></i>
+                To-Do
+            </h2>
+            <ul id="todo-list"
+                class="mt-4 mx-auto xs:max-w-94 sm:max-w-[31rem] md:max-w-[43rem] grid md:grid-cols-2 gap-1.5 md:gap-1">
+            </ul>
+        </div>
+        <div id="done-section" class="hidden">
+            <h2
+                class="w-24 xs:w-30 xs:text-lg sm:text-xl bg-emerald-100 dark:bg-emerald-500 border-l-8 border-l-emerald-600 dark:border-l-emerald-900 p-2 text-gray-700">
+                <i class="fas fa-check-square"></i>
+                Done
+            </h2>
+            <ul id="done-list"
+                class="mt-4 mx-auto xs:max-w-94 sm:max-w-[31rem] md:max-w-[43rem] grid md:grid-cols-2 gap-1.5 md:gap-1">
+            </ul>
+        </div>
+    </section>
+</body>
+
+</html>
